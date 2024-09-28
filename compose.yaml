@@ -1,0 +1,12 @@
+name: echelon_app
+
+services:
+  backend:
+    build: .
+    ports:
+      - 80:80
+    networks:
+      - insurance
+
+networks:
+  insurance:
