@@ -1,49 +1,17 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"log/slog"
 	"net/http"
 	"time"
 
+	_ "insurance_hack/docs"
+	"insurance_hack/internal/httpapi"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/rs/cors"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
-
-type GetUserResponse struct {
-	Id   string `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
-	Age  int    `json:"age,omitempty"`
-}
-
-func SimpleHandler(writer http.ResponseWriter, request *http.Request) {
-	id := chi.URLParam(request, "id")
-
-	newUser := GetUserResponse{
-		Id:   id,
-		Name: "Someone",
-		Age:  33,
-	}
-
-	body, err := json.Marshal(newUser)
-	if err != nil {
-		writer.WriteHeader(http.StatusInternalServerError)
-	}
-
-	_, err = writer.Write(body)
-	if err != nil {
-		slog.Error("got write error", "error", err)
-	}
-}
-
-func OriginMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
-		origin := request.Header.Get("Origin")
-		fmt.Println("Origin:", origin)
-		next.ServeHTTP(writer, request)
-	})
-}
 
 func ContentTypeMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
@@ -54,13 +22,23 @@ func ContentTypeMiddleware(next http.Handler) http.Handler {
 
 const baseUrl = "/api"
 
+//	@title			Insurance hack api
+//	@version		0.1
+//	@contact.email	boldyrev.now@mail.ru
+//	@contact.name	API Support
+//	@license.name	Apache 2.0
+//
+//	@host			79.174.82.229:80
+//	@BasePath		/api
+//	@schemes		http
+
 func main() {
 	r := chi.NewRouter()
-	r.Use(OriginMiddleware)
 	r.Use(ContentTypeMiddleware)
 	r.Use(cors.AllowAll().Handler)
 	r.Route(baseUrl, func(r chi.Router) {
-		r.Get("/user/{id}", SimpleHandler)
+		r.Get("/swagger/*", httpSwagger.Handler())
+		r.Get("/user/{id}", httpapi.SimpleHandler)
 	})
 
 	server := http.Server{

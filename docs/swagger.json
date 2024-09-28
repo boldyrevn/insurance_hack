@@ -1,0 +1,66 @@
+{
+    "schemes": [
+        "http"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "title": "Insurance hack api",
+        "contact": {
+            "name": "API Support",
+            "email": "boldyrev.now@mail.ru"
+        },
+        "license": {
+            "name": "Apache 2.0"
+        },
+        "version": "0.1"
+    },
+    "host": "79.174.82.229:80",
+    "basePath": "/api",
+    "paths": {
+        "/user/{id}": {
+            "get": {
+                "description": "Send user with specified ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Make dummy response",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of user",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/httpapi.GetUserResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "httpapi.GetUserResponse": {
+            "type": "object",
+            "properties": {
+                "age": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

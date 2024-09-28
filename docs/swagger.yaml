@@ -1,0 +1,43 @@
+basePath: /api
+definitions:
+  httpapi.GetUserResponse:
+    properties:
+      age:
+        type: integer
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+host: 79.174.82.229:80
+info:
+  contact:
+    email: boldyrev.now@mail.ru
+    name: API Support
+  license:
+    name: Apache 2.0
+  title: Insurance hack api
+  version: "0.1"
+paths:
+  /user/{id}:
+    get:
+      description: Send user with specified ID
+      parameters:
+      - description: ID of user
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/httpapi.GetUserResponse'
+        "500":
+          description: Internal Server Error
+      summary: Make dummy response
+schemes:
+- http
+swagger: "2.0"
