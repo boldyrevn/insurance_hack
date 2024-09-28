@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/rs/cors"
 )
 
 type GetUserResponse struct {
@@ -44,11 +45,20 @@ func OriginMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+func ContentTypeMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		writer.Header().Add("Content-Type", "application/json")
+		next.ServeHTTP(writer, request)
+	})
+}
+
 const baseUrl = "/api"
 
 func main() {
 	r := chi.NewRouter()
 	r.Use(OriginMiddleware)
+	r.Use(ContentTypeMiddleware)
+	r.Use(cors.AllowAll().Handler)
 	r.Route(baseUrl, func(r chi.Router) {
 		r.Get("/user/{id}", SimpleHandler)
 	})
@@ -62,4 +72,5 @@ func main() {
 	if err := server.ListenAndServe(); err != nil {
 		slog.Error("failed to stop server", "err", err)
 	}
+	slog.Info("stop server")
 }
