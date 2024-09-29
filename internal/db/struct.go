@@ -1,11 +1,13 @@
 package db
 
-import "github.com/jackc/pgx"
+import (
+	"github.com/jackc/pgx/v5/pgxpool"
+)
 
 type db struct {
-	conn *pgx.ConnPool
+	conn *pgxpool.Pool
 }
 
-func New(conn *pgx.ConnPool) DB {
+func New(conn *pgxpool.Pool) DB {
 	return &db{conn: conn}
 }

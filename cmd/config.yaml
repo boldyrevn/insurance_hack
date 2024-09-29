@@ -1,0 +1,6 @@
+host: localhost:80
+postgres:
+  db-name: insurance_db
+  host: 79.174.82.229
+  port: 5432
+  pool-max-conns: 10

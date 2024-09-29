@@ -7,13 +7,13 @@ import (
 	"strconv"
 )
 
-type errorResponse struct {
+type ErrorResponse struct {
 	Status  string `json:"status,omitempty"`
 	Message string `json:"message,omitempty"`
 }
 
 func handleError(writer http.ResponseWriter, status int, err error) {
-	respBody, _ := json.Marshal(errorResponse{
+	respBody, _ := json.Marshal(ErrorResponse{
 		Status:  strconv.Itoa(status),
 		Message: err.Error(),
 	})

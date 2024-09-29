@@ -1,5 +1,37 @@
 basePath: /api
 definitions:
+  dto.CreateUserRequest:
+    properties:
+      age:
+        type: integer
+      first_name:
+        type: string
+      last_name:
+        type: string
+      login:
+        type: string
+      password:
+        type: string
+    type: object
+  dto.GetTokenRequest:
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+    type: object
+  dto.GetTokenResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  httpapi.ErrorResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: string
+    type: object
   httpapi.GetUserResponse:
     properties:
       age:
@@ -7,6 +39,17 @@ definitions:
       id:
         type: string
       name:
+        type: string
+    type: object
+  model.User:
+    properties:
+      age:
+        type: integer
+      first_name:
+        type: string
+      last_name:
+        type: string
+      login:
         type: string
     type: object
 host: 79.174.82.229:80
@@ -19,6 +62,26 @@ info:
   title: Insurance hack api
   version: "0.1"
 paths:
+  /user:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpapi.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpapi.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user
   /user/{id}:
     get:
       description: Send user with specified ID
@@ -38,6 +101,62 @@ paths:
         "500":
           description: Internal Server Error
       summary: Make dummy response
+  /user/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: New user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpapi.ErrorResponse'
+      summary: Create new user
+  /user/token:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User's login and password
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GetTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetTokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpapi.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/httpapi.ErrorResponse'
+      summary: Get user's token
 schemes:
 - http
+securityDefinitions:
+  ApiKeyAuth:
+    description: Bearer authorization with JWT
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
