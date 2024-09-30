@@ -8,7 +8,8 @@ services:
     networks:
       - insurance
     command: -config ./data/config.yaml
-    volumes: ${PWD}/data:/data
+    volumes:
+      - ${PWD}/data:/data
   postgres:
     image: postgres:17
     restart: always
