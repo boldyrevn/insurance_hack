@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -30,6 +31,8 @@ func ContentTypeMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+var configPath = flag.String("config", "", "path to config.yaml")
+
 const baseUrl = "/api"
 
 //	@title						Insurance hack api
@@ -48,6 +51,7 @@ const baseUrl = "/api"
 //	@description				Bearer authorization with JWT
 
 func main() {
+	flag.Parse()
 	ctx := context.Background()
 
 	var (
@@ -55,7 +59,11 @@ func main() {
 		pgPass = os.Getenv("POSTGRES_PASSWORD")
 	)
 
-	configFile, err := os.Open("./cmd/config.yaml")
+	if configPath == nil {
+		log.Fatalf("config path is not specified")
+	}
+
+	configFile, err := os.Open(*configPath)
 	if err != nil {
 		log.Fatalf("failed to open config: %s", err)
 	}

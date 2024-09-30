@@ -16,6 +16,10 @@ WORKDIR /
 
 COPY --from=build-stage /app/main /main
 
+RUN mkdir /data
+
+VOLUME /data
+
 EXPOSE 80
 
 ENTRYPOINT ["./main"]
